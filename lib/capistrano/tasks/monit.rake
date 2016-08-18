@@ -3,7 +3,7 @@ namespace :monit do
   desc 'Monit status'
   task :status do
     on roles :app do
-      puts capture :sudo, :monit, :status
+      puts capture :monit, :status
     end
   end
 
@@ -24,13 +24,13 @@ namespace :monit do
 
   def monit_do(*args)
     on roles :app do
-      execute :sudo, :monit, *args
+      execute :monit, *args
     end
   end
 
   def all_processes_do(cmd)
     on roles :app do
-      output = capture :sudo, :monit, :status
+      output = capture :monit, :status
       processes = output.lines.grep(/^Process '/).grep(/#{fetch(:application)}/)
       processes.each do |process|
         process_name = process.split(/\s+/).last.delete "'"
